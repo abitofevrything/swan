@@ -80,12 +80,12 @@ jobs:
         with:
           context: .
           push: true
-          build-args:
-            - ARCH=${{ matrix.image_arch }}
-            - BINARY=${{ env.app_name }}_${{ matrix.platform }}
-          tags:
-            - ${{ env.app_name }}:${{ github.run_id }}-${{ matrix.platform }}
-            - ${{ env.app_name }}:latest
+          build-args: |
+            ARCH=${{ matrix.image_arch }}
+            BINARY=${{ env.app_name }}_${{ matrix.platform }}
+          tags: |
+            ${{ env.app_name }}:${{ github.run_id }}-${{ matrix.platform }}
+            ${{ env.app_name }}:latest
 
   create_release:
     needs: build
