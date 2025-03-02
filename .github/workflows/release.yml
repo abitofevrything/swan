@@ -75,6 +75,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
@@ -83,9 +89,8 @@ jobs:
           build-args: |
             ARCH=${{ matrix.image_arch }}
             BINARY=${{ env.app_name }}_${{ matrix.platform }}
-          tags: |
-            ${{ env.app_name }}:${{ github.run_id }}-${{ matrix.platform }}
-            ${{ env.app_name }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   create_release:
     needs: build
