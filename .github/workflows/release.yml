@@ -8,6 +8,8 @@ on:
 
 env:
   app_name: swan
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -19,6 +21,11 @@ jobs:
             image_arch: amd64
 
     runs-on: ${{ matrix.os }}
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
 
     steps:
       - name: checkout repository
@@ -60,6 +67,25 @@ jobs:
         with:
           name: ${{ env.app_name }}_image_${{ matrix.platform }}
           path: ${{ env.app_name }}_image_${{ matrix.platform }}.tar
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          push: true
+          build-args:
+            - ARCH=${{ matrix.image_arch }}
+            - BINARY=${{ env.app_name }}_${{ matrix.platform }}
+          tags:
+            - ${{ env.app_name }}:${{ github.run_id }}-${{ matrix.platform }}
+            - ${{ env.app_name }}:latest
 
   create_release:
     needs: build
