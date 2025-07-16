@@ -38,7 +38,7 @@ jobs:
         run: dart pub get
 
       - name: build application
-        run: dart compile exe lib/main.dart -o ${{ env.app_name }}_${{ matrix.platform }}
+        run: dart compile exe bin/main.dart -o ${{ env.app_name }}_${{ matrix.platform }}
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
@@ -55,7 +55,6 @@ jobs:
             -t ${{ env.app_name }}:${{ github.run_id }}-${{ matrix.platform }} \
             -t ${{ env.app_name }}:latest \
             --build-arg ARCH=${{ matrix.image_arch }} \
-            --build-arg BINARY=${{ env.app_name }}_${{ matrix.platform }} \
             -f Dockerfile . \
             --output type=docker,dest=${{ env.app_name }}_image_${{ matrix.platform }}.tar
         env:
