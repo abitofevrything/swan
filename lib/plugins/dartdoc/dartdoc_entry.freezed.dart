@@ -12,7 +12,8 @@ part of 'dartdoc_entry.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 DartdocEntry _$DartdocEntryFromJson(Map<String, dynamic> json) {
   return _DartdocEntry.fromJson(json);
@@ -40,17 +41,18 @@ mixin _$DartdocEntry {
 /// @nodoc
 abstract class $DartdocEntryCopyWith<$Res> {
   factory $DartdocEntryCopyWith(
-          DartdocEntry value, $Res Function(DartdocEntry) then) =
-      _$DartdocEntryCopyWithImpl<$Res, DartdocEntry>;
+    DartdocEntry value,
+    $Res Function(DartdocEntry) then,
+  ) = _$DartdocEntryCopyWithImpl<$Res, DartdocEntry>;
   @useResult
-  $Res call(
-      {String name,
-      @JsonKey(name: 'qualifiedName') String qualifiedName,
-      String href,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind') String type,
-      @JsonKey(name: 'desc') String description,
-      @JsonKey(required: false, name: 'enclosedBy')
-      DartdocEnclosedBy? enclosedBy});
+  $Res call({
+    String name,
+    @JsonKey(name: 'qualifiedName') String qualifiedName,
+    String href,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') String type,
+    @JsonKey(name: 'desc') String description,
+    @JsonKey(required: false, name: 'enclosedBy') DartdocEnclosedBy? enclosedBy,
+  });
 
   $DartdocEnclosedByCopyWith<$Res>? get enclosedBy;
 }
@@ -75,32 +77,35 @@ class _$DartdocEntryCopyWithImpl<$Res, $Val extends DartdocEntry>
     Object? description = null,
     Object? enclosedBy = freezed,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      qualifiedName: null == qualifiedName
-          ? _value.qualifiedName
-          : qualifiedName // ignore: cast_nullable_to_non_nullable
-              as String,
-      href: null == href
-          ? _value.href
-          : href // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      enclosedBy: freezed == enclosedBy
-          ? _value.enclosedBy
-          : enclosedBy // ignore: cast_nullable_to_non_nullable
-              as DartdocEnclosedBy?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            qualifiedName: null == qualifiedName
+                ? _value.qualifiedName
+                : qualifiedName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            href: null == href
+                ? _value.href
+                : href // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            enclosedBy: freezed == enclosedBy
+                ? _value.enclosedBy
+                : enclosedBy // ignore: cast_nullable_to_non_nullable
+                      as DartdocEnclosedBy?,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -120,18 +125,19 @@ class _$DartdocEntryCopyWithImpl<$Res, $Val extends DartdocEntry>
 abstract class _$$DartdocEntryImplCopyWith<$Res>
     implements $DartdocEntryCopyWith<$Res> {
   factory _$$DartdocEntryImplCopyWith(
-          _$DartdocEntryImpl value, $Res Function(_$DartdocEntryImpl) then) =
-      __$$DartdocEntryImplCopyWithImpl<$Res>;
+    _$DartdocEntryImpl value,
+    $Res Function(_$DartdocEntryImpl) then,
+  ) = __$$DartdocEntryImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      @JsonKey(name: 'qualifiedName') String qualifiedName,
-      String href,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind') String type,
-      @JsonKey(name: 'desc') String description,
-      @JsonKey(required: false, name: 'enclosedBy')
-      DartdocEnclosedBy? enclosedBy});
+  $Res call({
+    String name,
+    @JsonKey(name: 'qualifiedName') String qualifiedName,
+    String href,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') String type,
+    @JsonKey(name: 'desc') String description,
+    @JsonKey(required: false, name: 'enclosedBy') DartdocEnclosedBy? enclosedBy,
+  });
 
   @override
   $DartdocEnclosedByCopyWith<$Res>? get enclosedBy;
@@ -142,8 +148,9 @@ class __$$DartdocEntryImplCopyWithImpl<$Res>
     extends _$DartdocEntryCopyWithImpl<$Res, _$DartdocEntryImpl>
     implements _$$DartdocEntryImplCopyWith<$Res> {
   __$$DartdocEntryImplCopyWithImpl(
-      _$DartdocEntryImpl _value, $Res Function(_$DartdocEntryImpl) _then)
-      : super(_value, _then);
+    _$DartdocEntryImpl _value,
+    $Res Function(_$DartdocEntryImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -155,45 +162,48 @@ class __$$DartdocEntryImplCopyWithImpl<$Res>
     Object? description = null,
     Object? enclosedBy = freezed,
   }) {
-    return _then(_$DartdocEntryImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      qualifiedName: null == qualifiedName
-          ? _value.qualifiedName
-          : qualifiedName // ignore: cast_nullable_to_non_nullable
-              as String,
-      href: null == href
-          ? _value.href
-          : href // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      enclosedBy: freezed == enclosedBy
-          ? _value.enclosedBy
-          : enclosedBy // ignore: cast_nullable_to_non_nullable
-              as DartdocEnclosedBy?,
-    ));
+    return _then(
+      _$DartdocEntryImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        qualifiedName: null == qualifiedName
+            ? _value.qualifiedName
+            : qualifiedName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        href: null == href
+            ? _value.href
+            : href // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        enclosedBy: freezed == enclosedBy
+            ? _value.enclosedBy
+            : enclosedBy // ignore: cast_nullable_to_non_nullable
+                  as DartdocEnclosedBy?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$DartdocEntryImpl implements _DartdocEntry {
-  _$DartdocEntryImpl(
-      {required this.name,
-      @JsonKey(name: 'qualifiedName') required this.qualifiedName,
-      required this.href,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind') required this.type,
-      @JsonKey(name: 'desc') required this.description,
-      @JsonKey(required: false, name: 'enclosedBy') required this.enclosedBy});
+  _$DartdocEntryImpl({
+    required this.name,
+    @JsonKey(name: 'qualifiedName') required this.qualifiedName,
+    required this.href,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') required this.type,
+    @JsonKey(name: 'desc') required this.description,
+    @JsonKey(required: false, name: 'enclosedBy') required this.enclosedBy,
+  });
 
   factory _$DartdocEntryImpl.fromJson(Map<String, dynamic> json) =>
       _$$DartdocEntryImplFromJson(json);
@@ -239,7 +249,14 @@ class _$DartdocEntryImpl implements _DartdocEntry {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, name, qualifiedName, href, type, description, enclosedBy);
+    runtimeType,
+    name,
+    qualifiedName,
+    href,
+    type,
+    description,
+    enclosedBy,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -249,22 +266,20 @@ class _$DartdocEntryImpl implements _DartdocEntry {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DartdocEntryImplToJson(
-      this,
-    );
+    return _$$DartdocEntryImplToJson(this);
   }
 }
 
 abstract class _DartdocEntry implements DartdocEntry {
-  factory _DartdocEntry(
-      {required final String name,
-      @JsonKey(name: 'qualifiedName') required final String qualifiedName,
-      required final String href,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind')
-      required final String type,
-      @JsonKey(name: 'desc') required final String description,
-      @JsonKey(required: false, name: 'enclosedBy')
-      required final DartdocEnclosedBy? enclosedBy}) = _$DartdocEntryImpl;
+  factory _DartdocEntry({
+    required final String name,
+    @JsonKey(name: 'qualifiedName') required final String qualifiedName,
+    required final String href,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') required final String type,
+    @JsonKey(name: 'desc') required final String description,
+    @JsonKey(required: false, name: 'enclosedBy')
+    required final DartdocEnclosedBy? enclosedBy,
+  }) = _$DartdocEntryImpl;
 
   factory _DartdocEntry.fromJson(Map<String, dynamic> json) =
       _$DartdocEntryImpl.fromJson;
@@ -310,12 +325,14 @@ mixin _$DartdocEnclosedBy {
 /// @nodoc
 abstract class $DartdocEnclosedByCopyWith<$Res> {
   factory $DartdocEnclosedByCopyWith(
-          DartdocEnclosedBy value, $Res Function(DartdocEnclosedBy) then) =
-      _$DartdocEnclosedByCopyWithImpl<$Res, DartdocEnclosedBy>;
+    DartdocEnclosedBy value,
+    $Res Function(DartdocEnclosedBy) then,
+  ) = _$DartdocEnclosedByCopyWithImpl<$Res, DartdocEnclosedBy>;
   @useResult
-  $Res call(
-      {String name,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind') String type});
+  $Res call({
+    String name,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') String type,
+  });
 }
 
 /// @nodoc
@@ -330,69 +347,72 @@ class _$DartdocEnclosedByCopyWithImpl<$Res, $Val extends DartdocEnclosedBy>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? name = null,
-    Object? type = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? name = null, Object? type = null}) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$DartdocEnclosedByImplCopyWith<$Res>
     implements $DartdocEnclosedByCopyWith<$Res> {
-  factory _$$DartdocEnclosedByImplCopyWith(_$DartdocEnclosedByImpl value,
-          $Res Function(_$DartdocEnclosedByImpl) then) =
-      __$$DartdocEnclosedByImplCopyWithImpl<$Res>;
+  factory _$$DartdocEnclosedByImplCopyWith(
+    _$DartdocEnclosedByImpl value,
+    $Res Function(_$DartdocEnclosedByImpl) then,
+  ) = __$$DartdocEnclosedByImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind') String type});
+  $Res call({
+    String name,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') String type,
+  });
 }
 
 /// @nodoc
 class __$$DartdocEnclosedByImplCopyWithImpl<$Res>
     extends _$DartdocEnclosedByCopyWithImpl<$Res, _$DartdocEnclosedByImpl>
     implements _$$DartdocEnclosedByImplCopyWith<$Res> {
-  __$$DartdocEnclosedByImplCopyWithImpl(_$DartdocEnclosedByImpl _value,
-      $Res Function(_$DartdocEnclosedByImpl) _then)
-      : super(_value, _then);
+  __$$DartdocEnclosedByImplCopyWithImpl(
+    _$DartdocEnclosedByImpl _value,
+    $Res Function(_$DartdocEnclosedByImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? name = null,
-    Object? type = null,
-  }) {
-    return _then(_$DartdocEnclosedByImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? name = null, Object? type = null}) {
+    return _then(
+      _$DartdocEnclosedByImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$DartdocEnclosedByImpl implements _DartdocEnclosedBy {
-  _$DartdocEnclosedByImpl(
-      {required this.name,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind') required this.type});
+  _$DartdocEnclosedByImpl({
+    required this.name,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') required this.type,
+  });
 
   factory _$DartdocEnclosedByImpl.fromJson(Map<String, dynamic> json) =>
       _$$DartdocEnclosedByImplFromJson(json);
@@ -426,21 +446,21 @@ class _$DartdocEnclosedByImpl implements _DartdocEnclosedBy {
   @pragma('vm:prefer-inline')
   _$$DartdocEnclosedByImplCopyWith<_$DartdocEnclosedByImpl> get copyWith =>
       __$$DartdocEnclosedByImplCopyWithImpl<_$DartdocEnclosedByImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DartdocEnclosedByImplToJson(
-      this,
-    );
+    return _$$DartdocEnclosedByImplToJson(this);
   }
 }
 
 abstract class _DartdocEnclosedBy implements DartdocEnclosedBy {
-  factory _DartdocEnclosedBy(
-      {required final String name,
-      @JsonKey(fromJson: _typeFromJson, name: 'kind')
-      required final String type}) = _$DartdocEnclosedByImpl;
+  factory _DartdocEnclosedBy({
+    required final String name,
+    @JsonKey(fromJson: _typeFromJson, name: 'kind') required final String type,
+  }) = _$DartdocEnclosedByImpl;
 
   factory _DartdocEnclosedBy.fromJson(Map<String, dynamic> json) =
       _$DartdocEnclosedByImpl.fromJson;

@@ -1,5 +1,5 @@
 import 'package:petitparser/petitparser.dart';
-import 'package:swan/plugins/swa/model.dart';
+import 'model.dart';
 
 // TODO: update grammar file to reflect parser changes
 class SimpleWidgetAnnotationGrammer

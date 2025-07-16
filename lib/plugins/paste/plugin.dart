@@ -1,104 +1,102 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:nyxx/nyxx.dart';
-import 'package:swan/plugins/base/messages.dart';
-import 'package:swan/plugins/base/plugin.dart';
-import 'package:swan/plugins/env/plugin.dart';
-import 'package:swan/plugins/paste/client.dart';
+import 'package:nyxx_extensions/nyxx_extensions.dart';
+import 'package:swan/swan_plugin.dart';
+import 'client.dart';
 
-class PasteFiles extends BotPlugin {
+class PasteFiles extends SwanPlugin {
+  final PastebinClient pastebinClient;
+
   @override
   String get name => 'PasteFiles';
 
   @override
-  bool isEnabled(NyxxGateway client) => client.env.pastebinApiKey != null;
-
-  @override
-  String? buildHelpText(NyxxGateway client) {
-    String prefix = client.env.commandPrefix;
-    return 'Create PasteBin links for files.\n\n'
-        '- Attach files to your message and send `${prefix}paste`\n'
-        '- Reply to a message with files attached with `${prefix}paste`';
-  }
+  String? get helpText =>
+      'Create PasteBin links for files.\n\n'
+      '- Attach files to your message and send `${swan.configuration.prefix}paste`\n'
+      '- Reply to a message with files attached with `${swan.configuration.prefix}paste`';
 
   static const int _maxFileSize = 2 * 1024 * 1024;
 
+  PasteFiles({required super.swan, required String apiKey})
+    : pastebinClient = PastebinClient(apiKey);
+
   @override
   FutureOr<void> afterConnect(NyxxGateway client) async {
-    if (!isEnabled(client)) return;
+    final regex = RegExp(
+      r'^' + RegExp.escape(swan.configuration.prefix) + r'paste$',
+    );
+
     client.onMessageCreate.listen((event) async {
-      String prefix = client.env.commandPrefix;
-      if (event.message.author case User(isBot: true)) return;
-      RegExp regex = RegExp(r'^' + RegExp.escape(prefix) + r'paste$');
+      if (event.message.author case WebhookAuthor() || User(isBot: true)) {
+        return;
+      }
+
       if (!regex.hasMatch(event.message.content)) return;
-      List<Attachment> attachments = event.message.attachments;
+
+      var attachments = event.message.attachments;
       if (attachments.isEmpty) {
         attachments = event.message.referencedMessage?.attachments ?? [];
       }
+
       if (attachments.isEmpty) {
-        await event.message.channel.sendMessage(
+        await event.message.sendReply(
           MessageBuilder(
-            content: 'We didn\'t find any files attached to your message.\n\n'
-                '${buildHelpText(client)}}',
-            replyId: event.message.id,
             allowedMentions: AllowedMentions(repliedUser: false),
+            content:
+                'We didn\'t find any files attached to your message.\n\n'
+                '$helpText',
           ),
         );
         return;
       }
 
-      PastebinClient pastebinClient =
-          PastebinClient(client.env.pastebinApiKey!);
-
-      Map<String, String> files = {};
+      final files = <String, String>{};
       for (final attachment in attachments) {
         if (attachment.size > _maxFileSize) {
-          await event.message.channel.sendMessage(
+          await event.message.sendReply(
             MessageBuilder(
+              allowedMentions: AllowedMentions(repliedUser: false),
               content:
                   'To balance server load, we limit the size of files to {$_maxFileSize}.\n'
                   '`${attachment.fileName}` is too large (${attachment.size} bytes).',
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
             ),
           );
           logger.warning(
-            'File size too large: ${attachment.size} > 2MB:\n${event.link}',
+            'File size too large: ${attachment.size} > 2MB: ${await event.message.url}',
           );
           return;
         }
-        Uint8List bytes = await attachment.fetch();
+        final bytes = await attachment.fetch();
         try {
           files[attachment.fileName] = utf8.decode(bytes);
         } on FormatException {
-          await event.message.channel.sendMessage(
+          await event.message.sendReply(
             MessageBuilder(
+              allowedMentions: AllowedMentions(repliedUser: false),
               content:
                   'We only support text files. `${attachment.fileName}` is not a text file.',
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
             ),
           );
           return;
         }
       }
 
-      Map<String, String> links = {};
+      final links = <String, String>{};
       for (final file in files.entries) {
         try {
-          String id = await pastebinClient.upload(
+          final id = await pastebinClient.upload(
             file.value,
             name: file.key,
             language: 'dart',
           );
           links[file.key] = id;
         } on PasteClientException catch (e) {
-          await event.message.channel.sendMessage(
+          await event.message.sendReply(
             MessageBuilder(
-              content: 'Failed to upload file to PasteBin: ${e.message}',
-              replyId: event.message.id,
               allowedMentions: AllowedMentions(repliedUser: false),
+              content: 'Failed to upload file to PasteBin: ${e.message}',
             ),
           );
           logger.severe('Failed to upload file to PasteBin: ${e.message}');
@@ -106,23 +104,24 @@ class PasteFiles extends BotPlugin {
         }
       }
 
-      StringBuffer buffer = StringBuffer();
+      final buffer = StringBuffer();
       if (links.length == 1) {
-        buffer.write('Your paste is ready: \n');
-        buffer.write('<${links.entries.first.value}>');
+        buffer
+          ..writeln('Your paste is ready:')
+          ..writeln('<${links.entries.first.value}>');
       } else {
-        buffer.write('Here are your files: ');
+        buffer.writeln('Here are your files: ');
         for (final entry in links.entries) {
-          buffer.write('\n- ${entry.key}: <${entry.value}>');
+          buffer.writeln('- ${entry.key}: <${entry.value}>');
         }
       }
-      await event.message.channel.sendMessage(
+      await event.message.sendReply(
         MessageBuilder(
-          content: buffer.toString(),
-          replyId: event.message.id,
           allowedMentions: AllowedMentions(repliedUser: false),
+          content: buffer.toString(),
         ),
       );
+
       logger.info('Uploaded ${links.length} files to PasteBin');
     });
   }

@@ -1,8 +1,9 @@
 import 'package:http/http.dart' as http;
 
 class PastebinClient {
-  PastebinClient(this.apiKey);
   final String apiKey;
+
+  PastebinClient(this.apiKey);
 
   Future<String> upload(
     String content, {

@@ -1,17 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:swan/plugins/stackoverflow/post.dart';
+import 'post.dart';
 
 class StackOverflowClient {
-  StackOverflowClient({
-    this.apiKey,
-  });
+  StackOverflowClient({this.apiKey});
 
   final String? apiKey;
 
-  Future<StackOverflowPost> getPost({
-    required int postId,
-  }) async {
+  Future<StackOverflowPost> getPost({required int postId}) async {
     final Uri uri = Uri(
       scheme: 'https',
       host: 'api.stackexchange.com',

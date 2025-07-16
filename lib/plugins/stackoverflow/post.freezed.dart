@@ -12,7 +12,8 @@ part of 'post.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 StackOverflowPost _$StackOverflowPostFromJson(Map<String, dynamic> json) {
   return _StackOverflowPost.fromJson(json);
@@ -38,18 +39,20 @@ mixin _$StackOverflowPost {
 /// @nodoc
 abstract class $StackOverflowPostCopyWith<$Res> {
   factory $StackOverflowPostCopyWith(
-          StackOverflowPost value, $Res Function(StackOverflowPost) then) =
-      _$StackOverflowPostCopyWithImpl<$Res, StackOverflowPost>;
+    StackOverflowPost value,
+    $Res Function(StackOverflowPost) then,
+  ) = _$StackOverflowPostCopyWithImpl<$Res, StackOverflowPost>;
   @useResult
-  $Res call(
-      {StackOverflowPostOwner owner,
-      int score,
-      int lastActivityDate,
-      int creationDate,
-      int questionId,
-      String bodyMarkdown,
-      String link,
-      String title});
+  $Res call({
+    StackOverflowPostOwner owner,
+    int score,
+    int lastActivityDate,
+    int creationDate,
+    int questionId,
+    String bodyMarkdown,
+    String link,
+    String title,
+  });
 
   $StackOverflowPostOwnerCopyWith<$Res> get owner;
 }
@@ -76,40 +79,43 @@ class _$StackOverflowPostCopyWithImpl<$Res, $Val extends StackOverflowPost>
     Object? link = null,
     Object? title = null,
   }) {
-    return _then(_value.copyWith(
-      owner: null == owner
-          ? _value.owner
-          : owner // ignore: cast_nullable_to_non_nullable
-              as StackOverflowPostOwner,
-      score: null == score
-          ? _value.score
-          : score // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastActivityDate: null == lastActivityDate
-          ? _value.lastActivityDate
-          : lastActivityDate // ignore: cast_nullable_to_non_nullable
-              as int,
-      creationDate: null == creationDate
-          ? _value.creationDate
-          : creationDate // ignore: cast_nullable_to_non_nullable
-              as int,
-      questionId: null == questionId
-          ? _value.questionId
-          : questionId // ignore: cast_nullable_to_non_nullable
-              as int,
-      bodyMarkdown: null == bodyMarkdown
-          ? _value.bodyMarkdown
-          : bodyMarkdown // ignore: cast_nullable_to_non_nullable
-              as String,
-      link: null == link
-          ? _value.link
-          : link // ignore: cast_nullable_to_non_nullable
-              as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            owner: null == owner
+                ? _value.owner
+                : owner // ignore: cast_nullable_to_non_nullable
+                      as StackOverflowPostOwner,
+            score: null == score
+                ? _value.score
+                : score // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastActivityDate: null == lastActivityDate
+                ? _value.lastActivityDate
+                : lastActivityDate // ignore: cast_nullable_to_non_nullable
+                      as int,
+            creationDate: null == creationDate
+                ? _value.creationDate
+                : creationDate // ignore: cast_nullable_to_non_nullable
+                      as int,
+            questionId: null == questionId
+                ? _value.questionId
+                : questionId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bodyMarkdown: null == bodyMarkdown
+                ? _value.bodyMarkdown
+                : bodyMarkdown // ignore: cast_nullable_to_non_nullable
+                      as String,
+            link: null == link
+                ? _value.link
+                : link // ignore: cast_nullable_to_non_nullable
+                      as String,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -124,20 +130,22 @@ class _$StackOverflowPostCopyWithImpl<$Res, $Val extends StackOverflowPost>
 /// @nodoc
 abstract class _$$StackOverflowPostImplCopyWith<$Res>
     implements $StackOverflowPostCopyWith<$Res> {
-  factory _$$StackOverflowPostImplCopyWith(_$StackOverflowPostImpl value,
-          $Res Function(_$StackOverflowPostImpl) then) =
-      __$$StackOverflowPostImplCopyWithImpl<$Res>;
+  factory _$$StackOverflowPostImplCopyWith(
+    _$StackOverflowPostImpl value,
+    $Res Function(_$StackOverflowPostImpl) then,
+  ) = __$$StackOverflowPostImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {StackOverflowPostOwner owner,
-      int score,
-      int lastActivityDate,
-      int creationDate,
-      int questionId,
-      String bodyMarkdown,
-      String link,
-      String title});
+  $Res call({
+    StackOverflowPostOwner owner,
+    int score,
+    int lastActivityDate,
+    int creationDate,
+    int questionId,
+    String bodyMarkdown,
+    String link,
+    String title,
+  });
 
   @override
   $StackOverflowPostOwnerCopyWith<$Res> get owner;
@@ -147,9 +155,10 @@ abstract class _$$StackOverflowPostImplCopyWith<$Res>
 class __$$StackOverflowPostImplCopyWithImpl<$Res>
     extends _$StackOverflowPostCopyWithImpl<$Res, _$StackOverflowPostImpl>
     implements _$$StackOverflowPostImplCopyWith<$Res> {
-  __$$StackOverflowPostImplCopyWithImpl(_$StackOverflowPostImpl _value,
-      $Res Function(_$StackOverflowPostImpl) _then)
-      : super(_value, _then);
+  __$$StackOverflowPostImplCopyWithImpl(
+    _$StackOverflowPostImpl _value,
+    $Res Function(_$StackOverflowPostImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -163,55 +172,58 @@ class __$$StackOverflowPostImplCopyWithImpl<$Res>
     Object? link = null,
     Object? title = null,
   }) {
-    return _then(_$StackOverflowPostImpl(
-      owner: null == owner
-          ? _value.owner
-          : owner // ignore: cast_nullable_to_non_nullable
-              as StackOverflowPostOwner,
-      score: null == score
-          ? _value.score
-          : score // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastActivityDate: null == lastActivityDate
-          ? _value.lastActivityDate
-          : lastActivityDate // ignore: cast_nullable_to_non_nullable
-              as int,
-      creationDate: null == creationDate
-          ? _value.creationDate
-          : creationDate // ignore: cast_nullable_to_non_nullable
-              as int,
-      questionId: null == questionId
-          ? _value.questionId
-          : questionId // ignore: cast_nullable_to_non_nullable
-              as int,
-      bodyMarkdown: null == bodyMarkdown
-          ? _value.bodyMarkdown
-          : bodyMarkdown // ignore: cast_nullable_to_non_nullable
-              as String,
-      link: null == link
-          ? _value.link
-          : link // ignore: cast_nullable_to_non_nullable
-              as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$StackOverflowPostImpl(
+        owner: null == owner
+            ? _value.owner
+            : owner // ignore: cast_nullable_to_non_nullable
+                  as StackOverflowPostOwner,
+        score: null == score
+            ? _value.score
+            : score // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastActivityDate: null == lastActivityDate
+            ? _value.lastActivityDate
+            : lastActivityDate // ignore: cast_nullable_to_non_nullable
+                  as int,
+        creationDate: null == creationDate
+            ? _value.creationDate
+            : creationDate // ignore: cast_nullable_to_non_nullable
+                  as int,
+        questionId: null == questionId
+            ? _value.questionId
+            : questionId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bodyMarkdown: null == bodyMarkdown
+            ? _value.bodyMarkdown
+            : bodyMarkdown // ignore: cast_nullable_to_non_nullable
+                  as String,
+        link: null == link
+            ? _value.link
+            : link // ignore: cast_nullable_to_non_nullable
+                  as String,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StackOverflowPostImpl implements _StackOverflowPost {
-  _$StackOverflowPostImpl(
-      {required this.owner,
-      required this.score,
-      required this.lastActivityDate,
-      required this.creationDate,
-      required this.questionId,
-      required this.bodyMarkdown,
-      required this.link,
-      required this.title});
+  _$StackOverflowPostImpl({
+    required this.owner,
+    required this.score,
+    required this.lastActivityDate,
+    required this.creationDate,
+    required this.questionId,
+    required this.bodyMarkdown,
+    required this.link,
+    required this.title,
+  });
 
   factory _$StackOverflowPostImpl.fromJson(Map<String, dynamic> json) =>
       _$$StackOverflowPostImplFromJson(json);
@@ -259,34 +271,44 @@ class _$StackOverflowPostImpl implements _StackOverflowPost {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, owner, score, lastActivityDate,
-      creationDate, questionId, bodyMarkdown, link, title);
+  int get hashCode => Object.hash(
+    runtimeType,
+    owner,
+    score,
+    lastActivityDate,
+    creationDate,
+    questionId,
+    bodyMarkdown,
+    link,
+    title,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StackOverflowPostImplCopyWith<_$StackOverflowPostImpl> get copyWith =>
       __$$StackOverflowPostImplCopyWithImpl<_$StackOverflowPostImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StackOverflowPostImplToJson(
-      this,
-    );
+    return _$$StackOverflowPostImplToJson(this);
   }
 }
 
 abstract class _StackOverflowPost implements StackOverflowPost {
-  factory _StackOverflowPost(
-      {required final StackOverflowPostOwner owner,
-      required final int score,
-      required final int lastActivityDate,
-      required final int creationDate,
-      required final int questionId,
-      required final String bodyMarkdown,
-      required final String link,
-      required final String title}) = _$StackOverflowPostImpl;
+  factory _StackOverflowPost({
+    required final StackOverflowPostOwner owner,
+    required final int score,
+    required final int lastActivityDate,
+    required final int creationDate,
+    required final int questionId,
+    required final String bodyMarkdown,
+    required final String link,
+    required final String title,
+  }) = _$StackOverflowPostImpl;
 
   factory _StackOverflowPost.fromJson(Map<String, dynamic> json) =
       _$StackOverflowPostImpl.fromJson;
@@ -314,7 +336,8 @@ abstract class _StackOverflowPost implements StackOverflowPost {
 }
 
 StackOverflowPostOwner _$StackOverflowPostOwnerFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _StackOverflowPostOwner.fromJson(json);
 }
 
@@ -331,16 +354,19 @@ mixin _$StackOverflowPostOwner {
 
 /// @nodoc
 abstract class $StackOverflowPostOwnerCopyWith<$Res> {
-  factory $StackOverflowPostOwnerCopyWith(StackOverflowPostOwner value,
-          $Res Function(StackOverflowPostOwner) then) =
-      _$StackOverflowPostOwnerCopyWithImpl<$Res, StackOverflowPostOwner>;
+  factory $StackOverflowPostOwnerCopyWith(
+    StackOverflowPostOwner value,
+    $Res Function(StackOverflowPostOwner) then,
+  ) = _$StackOverflowPostOwnerCopyWithImpl<$Res, StackOverflowPostOwner>;
   @useResult
   $Res call({String displayName, String link});
 }
 
 /// @nodoc
-class _$StackOverflowPostOwnerCopyWithImpl<$Res,
-        $Val extends StackOverflowPostOwner>
+class _$StackOverflowPostOwnerCopyWithImpl<
+  $Res,
+  $Val extends StackOverflowPostOwner
+>
     implements $StackOverflowPostOwnerCopyWith<$Res> {
   _$StackOverflowPostOwnerCopyWithImpl(this._value, this._then);
 
@@ -351,20 +377,20 @@ class _$StackOverflowPostOwnerCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? displayName = null,
-    Object? link = null,
-  }) {
-    return _then(_value.copyWith(
-      displayName: null == displayName
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
-              as String,
-      link: null == link
-          ? _value.link
-          : link // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? displayName = null, Object? link = null}) {
+    return _then(
+      _value.copyWith(
+            displayName: null == displayName
+                ? _value.displayName
+                : displayName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            link: null == link
+                ? _value.link
+                : link // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -372,9 +398,9 @@ class _$StackOverflowPostOwnerCopyWithImpl<$Res,
 abstract class _$$StackOverflowPostOwnerImplCopyWith<$Res>
     implements $StackOverflowPostOwnerCopyWith<$Res> {
   factory _$$StackOverflowPostOwnerImplCopyWith(
-          _$StackOverflowPostOwnerImpl value,
-          $Res Function(_$StackOverflowPostOwnerImpl) then) =
-      __$$StackOverflowPostOwnerImplCopyWithImpl<$Res>;
+    _$StackOverflowPostOwnerImpl value,
+    $Res Function(_$StackOverflowPostOwnerImpl) then,
+  ) = __$$StackOverflowPostOwnerImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String displayName, String link});
@@ -382,30 +408,29 @@ abstract class _$$StackOverflowPostOwnerImplCopyWith<$Res>
 
 /// @nodoc
 class __$$StackOverflowPostOwnerImplCopyWithImpl<$Res>
-    extends _$StackOverflowPostOwnerCopyWithImpl<$Res,
-        _$StackOverflowPostOwnerImpl>
+    extends
+        _$StackOverflowPostOwnerCopyWithImpl<$Res, _$StackOverflowPostOwnerImpl>
     implements _$$StackOverflowPostOwnerImplCopyWith<$Res> {
   __$$StackOverflowPostOwnerImplCopyWithImpl(
-      _$StackOverflowPostOwnerImpl _value,
-      $Res Function(_$StackOverflowPostOwnerImpl) _then)
-      : super(_value, _then);
+    _$StackOverflowPostOwnerImpl _value,
+    $Res Function(_$StackOverflowPostOwnerImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? displayName = null,
-    Object? link = null,
-  }) {
-    return _then(_$StackOverflowPostOwnerImpl(
-      displayName: null == displayName
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
-              as String,
-      link: null == link
-          ? _value.link
-          : link // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? displayName = null, Object? link = null}) {
+    return _then(
+      _$StackOverflowPostOwnerImpl(
+        displayName: null == displayName
+            ? _value.displayName
+            : displayName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        link: null == link
+            ? _value.link
+            : link // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -445,21 +470,23 @@ class _$StackOverflowPostOwnerImpl implements _StackOverflowPostOwner {
   @override
   @pragma('vm:prefer-inline')
   _$$StackOverflowPostOwnerImplCopyWith<_$StackOverflowPostOwnerImpl>
-      get copyWith => __$$StackOverflowPostOwnerImplCopyWithImpl<
-          _$StackOverflowPostOwnerImpl>(this, _$identity);
+  get copyWith =>
+      __$$StackOverflowPostOwnerImplCopyWithImpl<_$StackOverflowPostOwnerImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StackOverflowPostOwnerImplToJson(
-      this,
-    );
+    return _$$StackOverflowPostOwnerImplToJson(this);
   }
 }
 
 abstract class _StackOverflowPostOwner implements StackOverflowPostOwner {
-  factory _StackOverflowPostOwner(
-      {required final String displayName,
-      required final String link}) = _$StackOverflowPostOwnerImpl;
+  factory _StackOverflowPostOwner({
+    required final String displayName,
+    required final String link,
+  }) = _$StackOverflowPostOwnerImpl;
 
   factory _StackOverflowPostOwner.fromJson(Map<String, dynamic> json) =
       _$StackOverflowPostOwnerImpl.fromJson;
@@ -471,5 +498,5 @@ abstract class _StackOverflowPostOwner implements StackOverflowPostOwner {
   @override
   @JsonKey(ignore: true)
   _$$StackOverflowPostOwnerImplCopyWith<_$StackOverflowPostOwnerImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -5,11 +5,11 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:nyxx/nyxx.dart';
+import 'package:nyxx_extensions/nyxx_extensions.dart';
 import 'package:petitparser/petitparser.dart';
-import 'package:swan/plugins/base/messages.dart';
-import 'package:swan/plugins/base/plugin.dart';
 import 'package:swan/plugins/dartdoc/dartdoc_entry.dart';
 import 'package:swan/plugins/dartdoc/search_grammar.dart';
+import 'package:swan/swan_plugin.dart';
 
 /// Very optimised, black magic.
 /// Adapted from https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows
@@ -39,8 +39,9 @@ int lehvenstein(String s, String t) {
       final deletionCost = previousV0;
       final insertionCost = previousV1;
 
-      var minInsertionDeletion =
-          deletionCost < insertionCost ? deletionCost : insertionCost;
+      var minInsertionDeletion = deletionCost < insertionCost
+          ? deletionCost
+          : insertionCost;
       minInsertionDeletion++;
 
       final overallMin = substitutionCost < minInsertionDeletion
@@ -57,8 +58,25 @@ int lehvenstein(String s, String t) {
   return v0[n];
 }
 
-class DartdocSearch extends BotPlugin {
-  DartdocSearch() {
+class DartdocSearch extends SwanPlugin {
+  static const expireDuration = Duration(hours: 1);
+
+  @override
+  String get name => 'DartdocSearch';
+
+  final documentationCache = <String, (DateTime, List<DartdocEntry>)>{};
+
+  late final Timer flutterCacheTimer;
+
+  @override
+  String get helpText =>
+      'Search Flutter & pub.dev package API documentation\n'
+      "- `![Name]` or `![package/Name]`: Return the documentation for `Name` in Flutter's or `package`'s API documentation\n"
+      "- `?[Name]` or `?[package/Name]`: Search for `Name` in Flutter's or `package`'s API documentation\n"
+      r'- `$[name]`: Return the pub.dev page for the package `name`\n'
+      '- `&[name]`: Search pub.dev for `name`\n';
+
+  DartdocSearch({required super.swan}) {
     // Fetching the flutter cache index takes quite a long time (as it is a very
     // large package) and it is probably the most commonly used package, so we
     // eagerly update the cache before it expires.
@@ -72,23 +90,6 @@ class DartdocSearch extends BotPlugin {
     // Kick off an initial load immediately
     getEntries('flutter', bypassCache: true);
   }
-
-  static const expireDuration = Duration(hours: 1);
-
-  @override
-  String get name => 'DartdocSearch';
-
-  final documentationCache = <String, (DateTime, List<DartdocEntry>)>{};
-
-  late final Timer flutterCacheTimer;
-
-  @override
-  String buildHelpText(NyxxGateway client) =>
-      'Search Flutter & pub.dev package API documentation\n'
-      "- `![Name]` or `![package/Name]`: Return the documentation for `Name` in Flutter's or `package`'s API documentation\n"
-      "- `?[Name]` or `?[package/Name]`: Search for `Name` in Flutter's or `package`'s API documentation\n"
-      '- `\$[name]`: Return the pub.dev page for the package `name`\n'
-      '- `&[name]`: Search pub.dev for `name`\n';
 
   String removeCodeBlocks(String text) {
     const notEscaped = r'(?<!\\)';
@@ -154,7 +155,7 @@ class DartdocSearch extends BotPlugin {
 
   Future<List<String>> searchPackages(String query) async {
     // Most common case.
-    if (query == 'flutter') return ['flutter'];
+    if (query == 'flutter' || query == 'dart') return ['flutter'];
 
     // A cache isn't really needed here (since the most common case by far is
     // hard coded above) but it avoids triggering multiple requests when a
@@ -188,9 +189,7 @@ class DartdocSearch extends BotPlugin {
 
   @override
   void afterConnect(NyxxGateway client) {
-    if (!isEnabled(client)) return;
-
-    final parser = SearchGrammar().build<List<Search>>();
+    final parser = SearchGrammar().build();
 
     Future<void> handle(Search search, MessageCreateEvent event) async {
       switch (search.kind) {
@@ -199,17 +198,18 @@ class DartdocSearch extends BotPlugin {
           final matchingPackages = await searchPackages(search.package!);
 
           if (matchingPackages.isEmpty) {
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              embeds: [
-                EmbedBuilder(
-                  color: const DiscordColor.fromRgb(255, 0, 0),
-                  title: 'Package Not Found',
-                  description: search.package!,
-                ),
-              ],
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                embeds: [
+                  EmbedBuilder(
+                    color: const DiscordColor.fromRgb(255, 0, 0),
+                    title: 'Package Not Found',
+                    description: search.package!,
+                  ),
+                ],
+              ),
+            );
             break;
           }
 
@@ -257,13 +257,15 @@ class DartdocSearch extends BotPlugin {
                         // `full.qualified.name` => complete qualified name
                         switch (periodCount) {
                           0 => e.name,
-                          1 => e.qualifiedName
-                              .split('.')
-                              .skip('.'.allMatches(e.qualifiedName).length - 1)
-                              .join('.'),
+                          1 =>
+                            e.qualifiedName
+                                .split('.')
+                                .skip(
+                                  '.'.allMatches(e.qualifiedName).length - 1,
+                                )
+                                .join('.'),
                           _ => e.qualifiedName,
-                        }
-                            .toLowerCase(),
+                        }.toLowerCase(),
                       ),
                       e,
                     ),
@@ -271,16 +273,17 @@ class DartdocSearch extends BotPlugin {
                   .toList();
 
               double getWeight(String type) => switch (type) {
-                    // Make classes more likely to appear than constructors or
-                    // libraries with the same name.
-                    'class_' => 1.1,
-                    _ => 1,
-                  };
+                // Make classes more likely to appear than constructors or
+                // libraries with the same name.
+                'class_' => 1.1,
+                _ => 1,
+              };
 
               // +1 so that exact matches (distance of 0) still get weighted.
               results.sort(
-                (a, b) => ((a.$1 + 1) / getWeight(a.$2.type))
-                    .compareTo((b.$1 + 1) / getWeight(b.$2.type)),
+                (a, b) => ((a.$1 + 1) / getWeight(a.$2.type)).compareTo(
+                  (b.$1 + 1) / getWeight(b.$2.type),
+                ),
               );
               return results;
             });
@@ -293,106 +296,116 @@ class DartdocSearch extends BotPlugin {
           );
 
           if (results.isEmpty) {
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              embeds: [
-                EmbedBuilder(
-                  color: const DiscordColor.fromRgb(255, 0, 0),
-                  title: 'Not Found',
-                  description: search.name,
-                ),
-              ],
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                embeds: [
+                  EmbedBuilder(
+                    color: const DiscordColor.fromRgb(255, 0, 0),
+                    title: 'Not Found',
+                    description: search.name,
+                  ),
+                ],
+              ),
+            );
             break;
           }
 
           if (search.kind == SearchKind.elementLookup) {
-            final topResults =
-                results.takeWhile((value) => value.$1 == results.first.$1);
+            final topResults = results.takeWhile(
+              (value) => value.$1 == results.first.$1,
+            );
 
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              content: topResults.map((e) => '$urlBase${e.$2.href}').join('\n'),
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                content: topResults
+                    .map((e) => '$urlBase${e.$2.href}')
+                    .join('\n'),
+              ),
+            );
           } else {
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              embeds: [
-                EmbedBuilder(
-                  title: 'Pub Search Results - ${search.name}',
-                  fields: [
-                    for (final result in results.take(10).map((e) => e.$2))
-                      EmbedFieldBuilder(
-                        name:
-                            '${result.type} ${result.name} - ${result.enclosedBy?.type ?? package}',
-                        value: '$urlBase${result.href}',
-                        isInline: false,
-                      ),
-                  ],
-                ),
-              ],
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                embeds: [
+                  EmbedBuilder(
+                    title: 'Pub Search Results - ${search.name}',
+                    fields: [
+                      for (final result in results.take(10).map((e) => e.$2))
+                        EmbedFieldBuilder(
+                          name:
+                              '${result.type} ${result.name} - ${result.enclosedBy?.type ?? package}',
+                          value: '$urlBase${result.href}',
+                          isInline: false,
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            );
           }
         case SearchKind.packageLookup:
         case SearchKind.packageSearch:
           final results = await searchPackages(search.name);
 
           if (results.isEmpty) {
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              embeds: [
-                EmbedBuilder(
-                  color: const DiscordColor.fromRgb(255, 0, 0),
-                  title: 'Not Found',
-                  description: search.name,
-                ),
-              ],
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                embeds: [
+                  EmbedBuilder(
+                    color: const DiscordColor.fromRgb(255, 0, 0),
+                    title: 'Not Found',
+                    description: search.name,
+                  ),
+                ],
+              ),
+            );
             break;
           }
 
           if (search.kind == SearchKind.packageLookup) {
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              content: 'https://pub.dev/packages/${results.first}',
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                content: 'https://pub.dev/packages/${results.first}',
+              ),
+            );
           } else {
-            await event.message.channel.sendMessage(MessageBuilder(
-              replyId: event.message.id,
-              allowedMentions: AllowedMentions(repliedUser: false),
-              embeds: [
-                EmbedBuilder(
-                  title: 'Pub Search Results - ${search.name}',
-                  fields: [
-                    for (final result in results.take(10))
-                      EmbedFieldBuilder(
-                        name: result,
-                        value: 'https://pub.dev/packages/$result',
-                        isInline: false,
-                      ),
-                  ],
-                ),
-              ],
-            ));
+            await event.message.sendReply(
+              MessageBuilder(
+                allowedMentions: AllowedMentions(repliedUser: false),
+                embeds: [
+                  EmbedBuilder(
+                    title: 'Pub Search Results - ${search.name}',
+                    fields: [
+                      for (final result in results.take(10))
+                        EmbedFieldBuilder(
+                          name: result,
+                          value: 'https://pub.dev/packages/$result',
+                          isInline: false,
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            );
           }
       }
 
-      logger.info('Sent search result: ${messageLink(event)}');
+      logger.info('Sent search result: ${await event.message.url}');
     }
 
     client.onMessageCreate.listen((event) async {
-      String content = event.message.content;
-      content = removeCodeBlocks(content);
+      if (event.message.author case WebhookAuthor() || User(isBot: true)) {
+        return;
+      }
+
+      final content = removeCodeBlocks(event.message.content);
       if (parser.parse(content) case Success(:final value)) {
         for (final search in value) {
-          if (event.message.author case User(isBot: false)) {
-            await handle(search, event);
-          }
+          handle(search, event);
         }
       }
     });

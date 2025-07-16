@@ -16,7 +16,8 @@ _$DartdocEntryImpl _$$DartdocEntryImplFromJson(Map<String, dynamic> json) =>
       enclosedBy: json['enclosedBy'] == null
           ? null
           : DartdocEnclosedBy.fromJson(
-              json['enclosedBy'] as Map<String, dynamic>),
+              json['enclosedBy'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$$DartdocEntryImplToJson(_$DartdocEntryImpl instance) =>
@@ -30,15 +31,12 @@ Map<String, dynamic> _$$DartdocEntryImplToJson(_$DartdocEntryImpl instance) =>
     };
 
 _$DartdocEnclosedByImpl _$$DartdocEnclosedByImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DartdocEnclosedByImpl(
-      name: json['name'] as String,
-      type: _typeFromJson(json['kind'] as int),
-    );
+  Map<String, dynamic> json,
+) => _$DartdocEnclosedByImpl(
+  name: json['name'] as String,
+  type: _typeFromJson(json['kind'] as int),
+);
 
 Map<String, dynamic> _$$DartdocEnclosedByImplToJson(
-        _$DartdocEnclosedByImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'kind': instance.type,
-    };
+  _$DartdocEnclosedByImpl instance,
+) => <String, dynamic>{'name': instance.name, 'kind': instance.type};
