@@ -6,12 +6,12 @@ part of 'dartdoc_entry.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DartdocEntryImpl _$$DartdocEntryImplFromJson(Map<String, dynamic> json) =>
-    _$DartdocEntryImpl(
+_DartdocEntry _$DartdocEntryFromJson(Map<String, dynamic> json) =>
+    _DartdocEntry(
       name: json['name'] as String,
       qualifiedName: json['qualifiedName'] as String,
       href: json['href'] as String,
-      type: _typeFromJson(json['kind'] as int),
+      type: _typeFromJson((json['kind'] as num).toInt()),
       description: json['desc'] as String,
       enclosedBy: json['enclosedBy'] == null
           ? null
@@ -20,7 +20,7 @@ _$DartdocEntryImpl _$$DartdocEntryImplFromJson(Map<String, dynamic> json) =>
             ),
     );
 
-Map<String, dynamic> _$$DartdocEntryImplToJson(_$DartdocEntryImpl instance) =>
+Map<String, dynamic> _$DartdocEntryToJson(_DartdocEntry instance) =>
     <String, dynamic>{
       'name': instance.name,
       'qualifiedName': instance.qualifiedName,
@@ -30,13 +30,11 @@ Map<String, dynamic> _$$DartdocEntryImplToJson(_$DartdocEntryImpl instance) =>
       'enclosedBy': instance.enclosedBy,
     };
 
-_$DartdocEnclosedByImpl _$$DartdocEnclosedByImplFromJson(
-  Map<String, dynamic> json,
-) => _$DartdocEnclosedByImpl(
-  name: json['name'] as String,
-  type: _typeFromJson(json['kind'] as int),
-);
+_DartdocEnclosedBy _$DartdocEnclosedByFromJson(Map<String, dynamic> json) =>
+    _DartdocEnclosedBy(
+      name: json['name'] as String,
+      type: _typeFromJson((json['kind'] as num).toInt()),
+    );
 
-Map<String, dynamic> _$$DartdocEnclosedByImplToJson(
-  _$DartdocEnclosedByImpl instance,
-) => <String, dynamic>{'name': instance.name, 'kind': instance.type};
+Map<String, dynamic> _$DartdocEnclosedByToJson(_DartdocEnclosedBy instance) =>
+    <String, dynamic>{'name': instance.name, 'kind': instance.type};

@@ -13,7 +13,20 @@ class SwanDatabase extends _$SwanDatabase {
     : super(NativeDatabase.createInBackground(File(databaseLocation)));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      if (from < 3) {
+        await m.addColumn(
+          guildConfigurations,
+          guildConfigurations.sendMultipleWarnings,
+        );
+        await m.addColumn(guildConfigurations, guildConfigurations.spamLimit);
+      }
+    },
+  );
 
   Future<GuildConfiguration?> antiSpamConfig(int id) => (select(
     guildConfigurations,
@@ -34,4 +47,7 @@ class GuildConfigurations extends Table {
   IntColumn get guildId => integer()();
   IntColumn get warningChannelId => integer()();
   IntColumn get rulesChannelId => integer()();
+  BoolColumn get sendMultipleWarnings =>
+      boolean().withDefault(Constant(true))();
+  IntColumn get spamLimit => integer().withDefault(Constant(5))();
 }

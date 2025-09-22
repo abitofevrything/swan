@@ -16,8 +16,9 @@ class AntiSpam extends SwanPlugin {
   String get helpText =>
       'Moderates spam by warning users for repeated messages.\n'
       'Repeating the same message 5 times additionally leads to a ban.\n\n'
-      'To enable this plugin, set the appropriate channels: '
-      '`${swan.configuration.prefix}warn-in #warnings #rules`';
+      'To enable this plugin, set the appropriate channels & limits: '
+      '`${swan.configuration.prefix}warn-in #warnings #rules limit-as-number'
+      ' send-multiple-warnings`';
 
   final Map<Snowflake, Map<Snowflake, Queue<Message>>> _messages = {};
 
@@ -79,7 +80,7 @@ class AntiSpam extends SwanPlugin {
       if (checkedContent.length < 20) return;
 
       final guildChannels = _messages[guild.id] ??= {};
-      final count = guildChannels.values.fold(
+      int countSpam() => guildChannels.values.fold(
         0,
         (count, queue) =>
             count +
@@ -92,6 +93,8 @@ class AntiSpam extends SwanPlugin {
                 .length,
       );
 
+      final count = countSpam();
+
       if (count != 0) {
         final config = await swan.database.antiSpamConfig(guild.id.value);
         if (config == null) return;
@@ -100,7 +103,19 @@ class AntiSpam extends SwanPlugin {
             (client.channels[Snowflake(config.warningChannelId)]
                 as PartialTextChannel);
 
-        await warningChannel.sendMessage(
+        if (!config.sendMultipleWarnings) {
+          await warningChannel.messages
+              .stream(order: StreamOrder.mostRecentFirst)
+              .take(10)
+              .asyncMap((message) async {
+                if (message.mentions.contains(event.message.author)) {
+                  await message.delete();
+                }
+              })
+              .drain();
+        }
+
+        final message = await warningChannel.sendMessage(
           MessageBuilder(
             content:
                 'Hey, <@${event.message.author.id}>, please take a second to '
@@ -111,9 +126,13 @@ class AntiSpam extends SwanPlugin {
           ),
         );
 
+        if (countSpam() != count && !config.sendMultipleWarnings) {
+          await message.delete();
+        }
+
         logger.info('Warned ${event.message.author.id} ($count reposts)');
 
-        if (count > 4) {
+        if (count >= config.spamLimit) {
           try {
             await guild.createBan(
               event.message.author.id,
@@ -149,7 +168,9 @@ class AntiSpam extends SwanPlugin {
       '${RegExp.escape(swan.configuration.prefix)}'
       r'warn-in\s+'
       r'<#(?<warnings>\d+)>\s+'
-      r'<#(?<rules>\d+)>\s*'
+      r'<#(?<rules>\d+)>\s+'
+      r'(?<limit>\d+)\s+'
+      r'(?<notify>true|false)\s*'
       r'$',
     );
 
@@ -167,19 +188,27 @@ class AntiSpam extends SwanPlugin {
     try {
       final warningChannelId = Snowflake.parse(match.namedGroup('warnings')!);
       final rulesChannelId = Snowflake.parse(match.namedGroup('rules')!);
+      var sendMultipleWarnings = match.namedGroup('notify')! == 'true';
+      var spamLimit = int.parse(match.namedGroup('limit')!);
 
       await swan.database.setAntiSpamConfig(
         GuildConfigurationsCompanion.insert(
           guildId: Value(guild.id.value),
           warningChannelId: warningChannelId.value,
           rulesChannelId: rulesChannelId.value,
+          sendMultipleWarnings: Value(sendMultipleWarnings),
+          spamLimit: Value(spamLimit),
         ),
       );
 
       await event.message.sendReply(
         MessageBuilder(
           content:
-              'Set warning channel to ${channelMention(warningChannelId)} and rule channel to ${channelMention(rulesChannelId)}',
+              'Set warning channel to ${channelMention(warningChannelId)}'
+              ' and rule channel to ${channelMention(rulesChannelId)}.'
+              ' Users will be banned after $spamLimit consecutive identical'
+              ' messages.'
+              ' ${sendMultipleWarnings ? 'Warnings will be deduplicated.' : 'Warnings will not be deduplicated.'}',
         ),
       );
 

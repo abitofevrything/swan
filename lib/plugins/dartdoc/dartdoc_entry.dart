@@ -4,7 +4,7 @@ part 'dartdoc_entry.g.dart';
 part 'dartdoc_entry.freezed.dart';
 
 @freezed
-class DartdocEntry with _$DartdocEntry {
+abstract class DartdocEntry with _$DartdocEntry {
   factory DartdocEntry({
     required String name,
     @JsonKey(name: 'qualifiedName') required String qualifiedName,
@@ -20,7 +20,7 @@ class DartdocEntry with _$DartdocEntry {
 }
 
 @freezed
-class DartdocEnclosedBy with _$DartdocEnclosedBy {
+abstract class DartdocEnclosedBy with _$DartdocEnclosedBy {
   factory DartdocEnclosedBy({
     required String name,
     @JsonKey(fromJson: _typeFromJson, name: 'kind') required String type,

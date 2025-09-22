@@ -7,7 +7,7 @@ part 'post.freezed.dart';
 part 'post.g.dart';
 
 @freezed
-class StackOverflowPost with _$StackOverflowPost {
+abstract class StackOverflowPost with _$StackOverflowPost {
   factory StackOverflowPost({
     required StackOverflowPostOwner owner,
     required int score,
@@ -24,7 +24,7 @@ class StackOverflowPost with _$StackOverflowPost {
 }
 
 @freezed
-class StackOverflowPostOwner with _$StackOverflowPostOwner {
+abstract class StackOverflowPostOwner with _$StackOverflowPostOwner {
   factory StackOverflowPostOwner({
     required String displayName,
     required String link,
