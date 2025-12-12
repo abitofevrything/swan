@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:nyxx/nyxx.dart';
 import 'package:swan/config.dart';
 import 'package:swan/database/database.dart';
@@ -31,7 +33,7 @@ class Swan {
       Swan(configuration: Configuration.fromEnvironment());
 
   Future<void> run() async {
-    await Nyxx.connectGateway(
+    final client = await Nyxx.connectGateway(
       configuration.discordToken,
       GatewayIntents.allUnprivileged |
           GatewayIntents.messageContent |
@@ -40,5 +42,8 @@ class Swan {
         plugins: [Logging(), CliIntegration(), IgnoreExceptions(), ...plugins],
       ),
     );
+
+    await client.onEvent.drain();
+    await database.close();
   }
 }
