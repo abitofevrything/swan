@@ -40,7 +40,8 @@ class FlutterDevAntiSpamV2State
 
       final looksLikeSpam =
           message.attachments.isNotEmpty ||
-          message.content.contains('discord.com');
+          message.content.contains('discord.com') ||
+          message.content.contains('discordapp.com');
 
       if (!looksLikeSpam) {
         return;
