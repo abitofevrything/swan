@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:nyxx/nyxx.dart';
 import 'package:swan/config.dart';
 import 'package:swan/database/database.dart';
+import 'package:swan/flutter_dev_anti_spam_v2.dart';
 import 'package:swan/plugins/anti_spam.dart';
 import 'package:swan/plugins/dartdoc/plugin.dart';
 import 'package:swan/plugins/help.dart';
@@ -39,7 +40,13 @@ class Swan {
           GatewayIntents.messageContent |
           GatewayIntents.guildMembers,
       options: GatewayClientOptions(
-        plugins: [Logging(), CliIntegration(), IgnoreExceptions(), ...plugins],
+        plugins: [
+          Logging(),
+          CliIntegration(),
+          IgnoreExceptions(),
+          ...plugins,
+          FlutterDevAntiSpamV2(),
+        ],
       ),
     );
 
