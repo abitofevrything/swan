@@ -126,8 +126,10 @@ class AntiSpam extends SwanPlugin {
           ),
         );
 
+        var deleted = false;
         if (countSpam() != count && !config.sendMultipleWarnings) {
           await message.delete();
+          deleted = true;
         }
 
         logger.info('Warned ${event.message.author.id} ($count reposts)');
@@ -145,6 +147,10 @@ class AntiSpam extends SwanPlugin {
             logger.warning(
               "Couldn't ban ${event.message.author.id} ($count reposts): ${e.message}",
             );
+          }
+
+          if (!deleted && !config.sendMultipleWarnings) {
+            await message.delete();
           }
         }
       }
